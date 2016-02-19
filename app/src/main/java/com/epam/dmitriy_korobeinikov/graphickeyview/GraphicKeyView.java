@@ -6,12 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Dmitriy_Korobeinikov on 2/19/2016.
  */
-public class GraphicKeyView extends ViewGroup {
+public class GraphicKeyView extends RelativeLayout {
 
     private Paint mPaint;
     private int startX;
@@ -35,11 +35,6 @@ public class GraphicKeyView extends ViewGroup {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(5f);
         setWillNotDraw(false);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        //TODO implement this to see children
     }
 
     @Override
