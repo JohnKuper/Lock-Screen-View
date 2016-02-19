@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView
+    android:id="@+id/graphicKey"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,20 +12,34 @@
     tools:context="com.epam.dmitriy_korobeinikov.graphickeyview.MainActivity"
     >
 
-    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView
-        android:id="@+id/graphicKey"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/firstNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/key_node_selector"
+        android:src="@drawable/key_node_inner_circle"
+        />
 
-        <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-            android:id="@+id/firstNode"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/key_node_selector"
-            android:src="@drawable/key_node_inner_circle"
-            />
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/secondNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/key_node_selector"
+        android:src="@drawable/key_node_inner_circle"
+        />
 
-    </com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView>
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/thirdNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/key_node_selector"
+        android:src="@drawable/key_node_inner_circle"
+        />
 
-</RelativeLayout>
+</com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView>
+
