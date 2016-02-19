@@ -4,52 +4,58 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by Dmitriy_Korobeinikov on 2/19/2016.
  */
 public class GraphicKeyView extends View {
 
-    private Paint mPaint = new Paint();
-    private Path mPath = new Path();
+    private Paint mPaint;
+
+    private int startX;
+    private int startY;
+    private int endX;
+    private int endY;
 
     public GraphicKeyView(Context context) {
         super(context);
+        init();
     }
 
     public GraphicKeyView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
 
+    private void init() {
+        mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(5f);
     }
 
-    public GraphicKeyView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawPath(mPath, mPaint);
+        canvas.drawLine(startX, startY, endX, endY, mPaint);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mPath.moveTo(x, y);
+                startX = (int) event.getX();
+                startY = (int) event.getY();
+                endX = (int) event.getX();
+                endY = (int) event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                mPath.lineTo(x, y);
+                endX = (int) event.getX();
+                endY = (int) event.getY();
                 break;
             default:
                 return false;
