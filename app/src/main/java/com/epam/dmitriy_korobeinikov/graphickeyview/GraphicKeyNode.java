@@ -19,6 +19,8 @@ public class GraphicKeyNode extends View {
     public static final int STATE_PRESSED = 1;
     public static final int STATE_WRONG_KEY = 2;
 
+    private boolean isPressed;
+
     @IntDef({STATE_DEFAULT, STATE_PRESSED, STATE_WRONG_KEY})
     public @interface KeyNodeState {
 
@@ -32,7 +34,7 @@ public class GraphicKeyNode extends View {
         super(context, attrs);
     }
 
-    public Point getCenterPoint() {
+    public Point getCenter() {
         int x = (int) (getX() + getWidth() / 2);
         int y = (int) (getY() + getHeight() / 2);
         return new Point(x, y);
@@ -43,14 +45,21 @@ public class GraphicKeyNode extends View {
         switch (state) {
             case STATE_DEFAULT:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_default);
+                isPressed = false;
                 break;
             case STATE_PRESSED:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_pressed);
+                isPressed = true;
                 break;
             case STATE_WRONG_KEY:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_wrong);
                 break;
         }
         setBackground(drawable);
+    }
+
+    @Override
+    public boolean isPressed() {
+        return isPressed;
     }
 }

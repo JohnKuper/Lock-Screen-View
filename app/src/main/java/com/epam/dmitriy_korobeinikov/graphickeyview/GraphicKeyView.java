@@ -23,10 +23,12 @@ public class GraphicKeyView extends RelativeLayout {
     private int endX;
     private int endY;
 
-    private ArrayList<float[]> mLines;
+    private ArrayList<float[]> mCompletedLines;
 
     private Paint mPaint;
-    private GraphicKeyNode mNodeUnderTap;
+    private GraphicKeyNode mStartNode;
+    private GraphicKeyNode mEndNode;
+    private ArrayList<GraphicKeyNode> mKeyNodes;
 
     public GraphicKeyView(Context context) {
         super(context);
@@ -39,7 +41,9 @@ public class GraphicKeyView extends RelativeLayout {
 
     private void init() {
         mPaint = new Paint();
-        mLines = new ArrayList<>();
+        mCompletedLines = new ArrayList<>();
+        mKeyNodes = new ArrayList<>();
+
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -48,7 +52,16 @@ public class GraphicKeyView extends RelativeLayout {
     }
 
     @Override
+    public void onViewAdded(View child) {
+        super.onViewAdded(child);
+        mKeyNodes.add((GraphicKeyNode) child);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
+        for (float[] line : mCompletedLines) {
+            canvas.drawLines(line, mPaint);
+        }
         canvas.drawLine(startX, startY, endX, endY, mPaint);
     }
 
@@ -61,21 +74,27 @@ public class GraphicKeyView extends RelativeLayout {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (isTapInsideNode(event)) {
-                    mNodeUnderTap.updateState(GraphicKeyNode.STATE_PRESSED);
-                    Point center = mNodeUnderTap.getCenterPoint();
-                    startX = endX = center.x;
-                    startY = endY = center.y;
+                mStartNode = getNodeUnderEvent(event);
+                if (mStartNode != null) {
+                    mStartNode.updateState(GraphicKeyNode.STATE_PRESSED);
+                    Point startCenter = mStartNode.getCenter();
+                    startX = endX = startCenter.x;
+                    startY = endY = startCenter.y;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mNodeUnderTap != null) {
+                if (mStartNode != null) {
                     endX = (int) event.getX();
                     endY = (int) event.getY();
+                    mEndNode = getNodeUnderEvent(event);
+                    if (mEndNode != null) {
+                        mEndNode.updateState(GraphicKeyNode.STATE_PRESSED);
+                        addCompleteLine();
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                mNodeUnderTap = null;
+                setupInitialState();
                 break;
             default:
                 return false;
@@ -84,18 +103,37 @@ public class GraphicKeyView extends RelativeLayout {
         return true;
     }
 
-    private boolean isTapInsideNode(MotionEvent event) {
-        int childCount = getChildCount();
-        View view;
+    private void setupInitialState() {
+        mStartNode = null;
+        mEndNode = null;
+        startX = startY = endX = endY = 0;
+        mCompletedLines.clear();
+        for (GraphicKeyNode node : mKeyNodes) {
+            node.updateState(GraphicKeyNode.STATE_DEFAULT);
+        }
+    }
+
+    private void addCompleteLine() {
+        Point endCenter = mEndNode.getCenter();
+        endX = endCenter.x;
+        endY = endCenter.y;
+        float[] completeLine = {startX, startY, endX, endY};
+        mCompletedLines.add(completeLine);
+
+        startX = endCenter.x;
+        startY = endCenter.y;
+    }
+
+    public GraphicKeyNode getNodeUnderEvent(MotionEvent event) {
+        GraphicKeyNode node;
         Rect rect = new Rect();
-        for (int i = 0; i < childCount; i++) {
-            view = getChildAt(i);
-            view.getHitRect(rect);
-            if (rect.contains((int) event.getX(), (int) event.getY())) {
-                mNodeUnderTap = (GraphicKeyNode) view;
-                return true;
+        for (int i = 0; i < mKeyNodes.size(); i++) {
+            node = mKeyNodes.get(i);
+            node.getHitRect(rect);
+            if (!node.isPressed() && rect.contains((int) event.getX(), (int) event.getY())) {
+                return node;
             }
         }
-        return false;
+        return null;
     }
 }
