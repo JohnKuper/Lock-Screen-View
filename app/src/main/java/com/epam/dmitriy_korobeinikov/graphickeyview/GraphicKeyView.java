@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,8 @@ import java.util.ArrayList;
  * Created by Dmitriy_Korobeinikov on 2/19/2016.
  */
 public class GraphicKeyView extends RelativeLayout {
+
+    private final static String CORRECT_PATH = "12369";
 
     private int startX;
     private int startY;
@@ -29,6 +33,8 @@ public class GraphicKeyView extends RelativeLayout {
     private GraphicKeyNode mStartNode;
     private GraphicKeyNode mEndNode;
     private ArrayList<GraphicKeyNode> mNodes;
+
+    private StringBuilder mPath = new StringBuilder();
 
     public GraphicKeyView(Context context) {
         super(context);
@@ -80,6 +86,8 @@ public class GraphicKeyView extends RelativeLayout {
                     Point startCenter = mStartNode.getCenter();
                     startX = endX = startCenter.x;
                     startY = endY = startCenter.y;
+
+                    mPath.append(mNodes.indexOf(mStartNode));
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -90,11 +98,18 @@ public class GraphicKeyView extends RelativeLayout {
                     if (mEndNode != null) {
                         mEndNode.updateState(GraphicKeyNode.STATE_PRESSED);
                         connectNodes();
+                        mPath.append(mNodes.indexOf(mEndNode));
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                setupInitialState();
+                if (!mPath.toString().equals(CORRECT_PATH)) {
+                    Toast.makeText(getContext(), "This key is wrong", Toast.LENGTH_SHORT).show();
+                    setupInitialState();
+                } else {
+                    Toast.makeText(getContext(), "This key is correct", Toast.LENGTH_SHORT).show();
+                    setupInitialState();
+                }
                 break;
             default:
                 return false;
@@ -120,8 +135,12 @@ public class GraphicKeyView extends RelativeLayout {
         startX = startY = endX = endY = 0;
         mCompletedLines.clear();
         for (GraphicKeyNode node : mNodes) {
-            node.updateState(GraphicKeyNode.STATE_DEFAULT);
+            node.updateState(GraphicKeyNode.STATE_WRONG_KEY);
         }
+//        SystemClock.sleep(500);
+//        for (GraphicKeyNode node : mNodes) {
+//            node.updateState(GraphicKeyNode.STATE_DEFAULT);
+//        }
     }
 
     public GraphicKeyNode getNodeUnderEvent(MotionEvent event) {
