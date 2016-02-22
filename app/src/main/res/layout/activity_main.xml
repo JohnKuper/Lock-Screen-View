@@ -11,13 +11,6 @@
     tools:context="com.epam.dmitriy_korobeinikov.graphickeyview.MainActivity">
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/firstNode"
-        android:layout_width="@dimen/node_size"
-        android:layout_height="@dimen/node_size"
-        android:layout_marginLeft="20dp"
-        android:background="@drawable/key_node_default" />
-
-    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
         android:id="@+id/secondNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
@@ -25,12 +18,76 @@
         android:background="@drawable/key_node_default" />
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/firstNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_marginRight="@dimen/horizontal_margin_btw_nodes"
+        android:layout_toLeftOf="@id/secondNode"
+        android:background="@drawable/key_node_default" />
+
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
         android:id="@+id/thirdNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/horizontal_margin_btw_nodes"
+        android:layout_toRightOf="@id/secondNode"
+        android:background="@drawable/key_node_default" />
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/fifthNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_below="@id/secondNode"
         android:layout_centerHorizontal="true"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="@dimen/vertical_margin_btw_nodes"
+        android:background="@drawable/key_node_default" />
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/forthNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_alignTop="@id/fifthNode"
+        android:layout_marginRight="@dimen/horizontal_margin_btw_nodes"
+        android:layout_toLeftOf="@id/fifthNode"
+        android:background="@drawable/key_node_default" />
+
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/sixthNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_alignTop="@id/fifthNode"
+        android:layout_marginLeft="@dimen/horizontal_margin_btw_nodes"
+        android:layout_toRightOf="@id/fifthNode"
+        android:background="@drawable/key_node_default" />
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/eighthNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_below="@id/fifthNode"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/vertical_margin_btw_nodes"
+        android:background="@drawable/key_node_default" />
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/seventhNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_alignTop="@id/eighthNode"
+        android:layout_marginRight="@dimen/horizontal_margin_btw_nodes"
+        android:layout_toLeftOf="@id/eighthNode"
+        android:background="@drawable/key_node_default" />
+
+
+    <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
+        android:id="@+id/ninthNode"
+        android:layout_width="@dimen/node_size"
+        android:layout_height="@dimen/node_size"
+        android:layout_alignTop="@id/eighthNode"
+        android:layout_marginLeft="@dimen/horizontal_margin_btw_nodes"
+        android:layout_toRightOf="@id/eighthNode"
         android:background="@drawable/key_node_default" />
 
 </com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView>

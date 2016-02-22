@@ -28,7 +28,7 @@ public class GraphicKeyView extends RelativeLayout {
     private Paint mPaint;
     private GraphicKeyNode mStartNode;
     private GraphicKeyNode mEndNode;
-    private ArrayList<GraphicKeyNode> mKeyNodes;
+    private ArrayList<GraphicKeyNode> mNodes;
 
     public GraphicKeyView(Context context) {
         super(context);
@@ -42,7 +42,7 @@ public class GraphicKeyView extends RelativeLayout {
     private void init() {
         mPaint = new Paint();
         mCompletedLines = new ArrayList<>();
-        mKeyNodes = new ArrayList<>();
+        mNodes = new ArrayList<>();
 
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.BLACK);
@@ -54,7 +54,7 @@ public class GraphicKeyView extends RelativeLayout {
     @Override
     public void onViewAdded(View child) {
         super.onViewAdded(child);
-        mKeyNodes.add((GraphicKeyNode) child);
+        mNodes.add((GraphicKeyNode) child);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class GraphicKeyView extends RelativeLayout {
                     mEndNode = getNodeUnderEvent(event);
                     if (mEndNode != null) {
                         mEndNode.updateState(GraphicKeyNode.STATE_PRESSED);
-                        addCompleteLine();
+                        connectNodes();
                     }
                 }
                 break;
@@ -103,17 +103,7 @@ public class GraphicKeyView extends RelativeLayout {
         return true;
     }
 
-    private void setupInitialState() {
-        mStartNode = null;
-        mEndNode = null;
-        startX = startY = endX = endY = 0;
-        mCompletedLines.clear();
-        for (GraphicKeyNode node : mKeyNodes) {
-            node.updateState(GraphicKeyNode.STATE_DEFAULT);
-        }
-    }
-
-    private void addCompleteLine() {
+    private void connectNodes() {
         Point endCenter = mEndNode.getCenter();
         endX = endCenter.x;
         endY = endCenter.y;
@@ -124,11 +114,21 @@ public class GraphicKeyView extends RelativeLayout {
         startY = endCenter.y;
     }
 
+    private void setupInitialState() {
+        mStartNode = null;
+        mEndNode = null;
+        startX = startY = endX = endY = 0;
+        mCompletedLines.clear();
+        for (GraphicKeyNode node : mNodes) {
+            node.updateState(GraphicKeyNode.STATE_DEFAULT);
+        }
+    }
+
     public GraphicKeyNode getNodeUnderEvent(MotionEvent event) {
         GraphicKeyNode node;
         Rect rect = new Rect();
-        for (int i = 0; i < mKeyNodes.size(); i++) {
-            node = mKeyNodes.get(i);
+        for (int i = 0; i < mNodes.size(); i++) {
+            node = mNodes.get(i);
             node.getHitRect(rect);
             if (!node.isPressed() && rect.contains((int) event.getX(), (int) event.getY())) {
                 return node;
