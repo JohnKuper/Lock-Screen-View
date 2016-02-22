@@ -5,12 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageButton;
 
 /**
  * Created by Dmitriy_Korobeinikov on 2/19/2016.
  */
-public class GraphicKeyNode extends ImageButton {
+public class GraphicKeyNode extends View {
 
     public static final int STATE_DEFAULT = 0;
     public static final int STATE_PRESSED = 1;
