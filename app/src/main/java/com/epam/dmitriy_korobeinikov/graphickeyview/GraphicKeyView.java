@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -52,22 +53,25 @@ public class GraphicKeyView extends RelativeLayout {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return true;
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (isTapInsideNode(event)) {
-                    int[] center = mNodeUnderTap.getCenterCoordinates();
-                    startX = endX = center[0];
-                    startY = endY = center[1];
+                    mNodeUnderTap.updateState(GraphicKeyNode.STATE_PRESSED);
+                    Point center = mNodeUnderTap.getCenterPoint();
+                    startX = endX = center.x;
+                    startY = endY = center.y;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mNodeUnderTap != null) {
                     endX = (int) event.getX();
                     endY = (int) event.getY();
-                    if (isTapInsideNode(event)) {
-
-                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:

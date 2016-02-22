@@ -1,8 +1,10 @@
 package com.epam.dmitriy_korobeinikov.graphickeyview;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,21 +32,25 @@ public class GraphicKeyNode extends View {
         super(context, attrs);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Drawable drawable = getResources().getDrawable(R.drawable.key_node_pressed);
+    public Point getCenterPoint() {
+        int x = (int) (getX() + getWidth() / 2);
+        int y = (int) (getY() + getHeight() / 2);
+        return new Point(x, y);
+    }
+
+    public void updateState(@KeyNodeState int state) {
+        Drawable drawable = null;
+        switch (state) {
+            case STATE_DEFAULT:
+                drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_default);
+                break;
+            case STATE_PRESSED:
+                drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_pressed);
+                break;
+            case STATE_WRONG_KEY:
+                drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_wrong);
+                break;
+        }
         setBackground(drawable);
-        return false;
-    }
-
-    public int[] getCenterCoordinates() {
-        int[] center = new int[2];
-        center[0] = (int) (getX() + getWidth() / 2);
-        center[1] = (int) (getY() + getHeight() / 2);
-        return center;
-    }
-
-    public void updateStateDrawable(@KeyNodeState int state) {
-
     }
 }
