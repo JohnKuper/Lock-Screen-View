@@ -11,7 +11,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode.KeyNodeState;
 
 import java.util.ArrayList;
 
@@ -20,8 +21,10 @@ import java.util.ArrayList;
  */
 public class GraphicKeyLayout extends ViewGroup {
 
-    private final static String CORRECT_PATH = "12369";
+    private static final String CORRECT_PATH = "01258";
     private static final int NODES_IN_ROW = 3;
+
+    private final DelayedInitialState mDelayedInitialState = new DelayedInitialState();
 
     private int startX;
     private int startY;
@@ -32,7 +35,7 @@ public class GraphicKeyLayout extends ViewGroup {
 
     private Paint mPaint;
     private GraphicKeyNode mStartNode;
-    private GraphicKeyNode mEndNode;
+    private GraphicKeyNode mLastNode;
     private ArrayList<float[]> mCompletedLines;
     private ArrayList<GraphicKeyNode> mNodes;
     private StringBuilder mPath = new StringBuilder();
@@ -116,18 +119,8 @@ public class GraphicKeyLayout extends ViewGroup {
     }
 
     @Override
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    }
-
-    @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new LayoutParams(getContext(), attrs);
-    }
-
-    @Override
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
-        return new LayoutParams(p.width, p.height);
     }
 
     @Override
@@ -147,6 +140,9 @@ public class GraphicKeyLayout extends ViewGroup {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                this.removeCallbacks(mDelayedInitialState);
+                setupInitialState();
+
                 mStartNode = getNodeUnderEvent(event);
                 if (mStartNode != null) {
                     mStartNode.updateState(GraphicKeyNode.STATE_CHECKED);
@@ -159,18 +155,33 @@ public class GraphicKeyLayout extends ViewGroup {
                 if (mStartNode != null) {
                     endX = (int) event.getX();
                     endY = (int) event.getY();
-                    mEndNode = getNodeUnderEvent(event);
-                    if (mEndNode != null) {
-                        mEndNode.updateState(GraphicKeyNode.STATE_CHECKED);
+                    GraphicKeyNode nextNode = getNodeUnderEvent(event);
+                    if (nextNode != null) {
+                        mLastNode = nextNode;
+                        mLastNode.updateState(GraphicKeyNode.STATE_CHECKED);
                         connectNodes();
-                        mPath.append(mNodes.indexOf(mEndNode));
+                        mPath.append(mNodes.indexOf(mLastNode));
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                if (mStartNode == null) {
+                    break;
+                }
+                Point endCenter;
+                if (mLastNode != null) {
+                    endCenter = mLastNode.getCenter();
+                } else {
+                    endCenter = mStartNode.getCenter();
+                }
+                endX = endCenter.x;
+                endY = endCenter.y;
+
                 if (mPath.toString().equals(CORRECT_PATH)) {
-                    Toast.makeText(getContext(), "This key is correct", Toast.LENGTH_SHORT).show();
                     setupInitialState();
+                } else {
+                    showErrorKey();
+                    this.postDelayed(mDelayedInitialState, 2000);
                 }
                 break;
             default:
@@ -180,23 +191,44 @@ public class GraphicKeyLayout extends ViewGroup {
         return true;
     }
 
+
     private void startNewLine(Point center) {
         startX = endX = center.x;
         startY = endY = center.y;
     }
 
     private void connectNodes() {
-        Point center = mEndNode.getCenter();
-        float[] completeLine = {startX, startY, center.x, center.y};
+        Point lastNodeCenter = mLastNode.getCenter();
+        float[] completeLine = {startX, startY, lastNodeCenter.x, lastNodeCenter.y};
         mCompletedLines.add(completeLine);
-        startNewLine(center);
+        startNewLine(lastNodeCenter);
+    }
+
+    private void showErrorKey() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            GraphicKeyNode child = (GraphicKeyNode) getChildAt(i);
+            if (child.isChecked()) {
+                child.updateState(GraphicKeyNode.STATE_WRONG_KEY);
+            }
+        }
     }
 
     private void setupInitialState() {
         mStartNode = null;
-        mEndNode = null;
-        startX = startY = endX = endY = 0;
+        mLastNode = null;
+        mPath.setLength(0);
+        startNewLine(new Point(0, 0));
         mCompletedLines.clear();
+        updateAllNodesState(GraphicKeyNode.STATE_DEFAULT);
+    }
+
+    private void updateAllNodesState(@KeyNodeState int state) {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            GraphicKeyNode child = (GraphicKeyNode) getChildAt(i);
+            child.updateState(state);
+        }
     }
 
     public GraphicKeyNode getNodeUnderEvent(MotionEvent event) {
@@ -213,15 +245,20 @@ public class GraphicKeyLayout extends ViewGroup {
     }
 
     public static class LayoutParams extends ViewGroup.LayoutParams {
+
         private int x;
         private int y;
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
         }
+    }
 
-        public LayoutParams(int width, int height) {
-            super(width, height);
+    private final class DelayedInitialState implements Runnable {
+
+        @Override
+        public void run() {
+            setupInitialState();
         }
     }
 }
