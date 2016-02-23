@@ -168,21 +168,8 @@ public class GraphicKeyLayout extends ViewGroup {
                 if (mStartNode == null) {
                     break;
                 }
-                Point endCenter;
-                if (mLastNode != null) {
-                    endCenter = mLastNode.getCenter();
-                } else {
-                    endCenter = mStartNode.getCenter();
-                }
-                endX = endCenter.x;
-                endY = endCenter.y;
-
-                if (mPath.toString().equals(CORRECT_PATH)) {
-                    setupInitialState();
-                } else {
-                    showErrorKey();
-                    this.postDelayed(mDelayedInitialState, 2000);
-                }
+                cutOffExcessEnd();
+                checkGraphicKey();
                 break;
             default:
                 return false;
@@ -191,6 +178,35 @@ public class GraphicKeyLayout extends ViewGroup {
         return true;
     }
 
+    private void cutOffExcessEnd() {
+        Point endCenter;
+        if (mLastNode != null) {
+            endCenter = mLastNode.getCenter();
+        } else {
+            endCenter = mStartNode.getCenter();
+        }
+        endX = endCenter.x;
+        endY = endCenter.y;
+    }
+
+    private void checkGraphicKey() {
+        if (mPath.toString().equals(CORRECT_PATH)) {
+            setupInitialState();
+        } else {
+            showErrorKey();
+            this.postDelayed(mDelayedInitialState, 2000);
+        }
+    }
+
+    private void showErrorKey() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            GraphicKeyNode child = (GraphicKeyNode) getChildAt(i);
+            if (child.isChecked()) {
+                child.updateState(GraphicKeyNode.STATE_WRONG_KEY);
+            }
+        }
+    }
 
     private void startNewLine(Point center) {
         startX = endX = center.x;
@@ -202,16 +218,6 @@ public class GraphicKeyLayout extends ViewGroup {
         float[] completeLine = {startX, startY, lastNodeCenter.x, lastNodeCenter.y};
         mCompletedLines.add(completeLine);
         startNewLine(lastNodeCenter);
-    }
-
-    private void showErrorKey() {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            GraphicKeyNode child = (GraphicKeyNode) getChildAt(i);
-            if (child.isChecked()) {
-                child.updateState(GraphicKeyNode.STATE_WRONG_KEY);
-            }
-        }
     }
 
     private void setupInitialState() {
