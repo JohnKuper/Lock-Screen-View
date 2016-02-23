@@ -1,94 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyLayout
     android:id="@+id/graphicKey"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:graphicKey="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="38dp"
+    android:paddingTop="16dp"
+    graphicKey:horizontalSpacing="16dp"
+    graphicKey:verticalSpacing="16dp"
     tools:context="com.epam.dmitriy_korobeinikov.graphickeyview.MainActivity">
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/secondNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/key_node_default" />
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/firstNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_marginRight="@dimen/horizontal_margin_btw_nodes"
-        android:layout_toLeftOf="@id/secondNode"
-        android:background="@drawable/key_node_default" />
-
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/thirdNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_marginLeft="@dimen/horizontal_margin_btw_nodes"
-        android:layout_toRightOf="@id/secondNode"
-        android:background="@drawable/key_node_default" />
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/fifthNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_below="@id/secondNode"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/vertical_margin_btw_nodes"
-        android:background="@drawable/key_node_default" />
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/forthNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_alignTop="@id/fifthNode"
-        android:layout_marginRight="@dimen/horizontal_margin_btw_nodes"
-        android:layout_toLeftOf="@id/fifthNode"
-        android:background="@drawable/key_node_default" />
-
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/sixthNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_alignTop="@id/fifthNode"
-        android:layout_marginLeft="@dimen/horizontal_margin_btw_nodes"
-        android:layout_toRightOf="@id/fifthNode"
-        android:background="@drawable/key_node_default" />
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/eighthNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_below="@id/fifthNode"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/vertical_margin_btw_nodes"
-        android:background="@drawable/key_node_default" />
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/seventhNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_alignTop="@id/eighthNode"
-        android:layout_marginRight="@dimen/horizontal_margin_btw_nodes"
-        android:layout_toLeftOf="@id/eighthNode"
-        android:background="@drawable/key_node_default" />
-
+        android:background="@drawable/key_node_default"/>
 
     <com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode
-        android:id="@+id/ninthNode"
         android:layout_width="@dimen/node_size"
         android:layout_height="@dimen/node_size"
-        android:layout_alignTop="@id/eighthNode"
-        android:layout_marginLeft="@dimen/horizontal_margin_btw_nodes"
-        android:layout_toRightOf="@id/eighthNode"
-        android:background="@drawable/key_node_default" />
+        android:background="@drawable/key_node_default"/>
 
-</com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyView>
+</com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyLayout>
 

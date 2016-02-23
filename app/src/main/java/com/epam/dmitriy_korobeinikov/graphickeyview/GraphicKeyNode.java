@@ -6,9 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 
 /**
  * Created by Dmitriy_Korobeinikov on 2/19/2016.
@@ -16,12 +14,12 @@ import android.widget.ImageButton;
 public class GraphicKeyNode extends View {
 
     public static final int STATE_DEFAULT = 0;
-    public static final int STATE_PRESSED = 1;
+    public static final int STATE_CHECKED = 1;
     public static final int STATE_WRONG_KEY = 2;
 
-    private boolean isPressed;
+    private boolean isChecked;
 
-    @IntDef({STATE_DEFAULT, STATE_PRESSED, STATE_WRONG_KEY})
+    @IntDef({STATE_DEFAULT, STATE_CHECKED, STATE_WRONG_KEY})
     public @interface KeyNodeState {
 
     }
@@ -45,11 +43,11 @@ public class GraphicKeyNode extends View {
         switch (state) {
             case STATE_DEFAULT:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_default);
-                isPressed = false;
+                isChecked = false;
                 break;
-            case STATE_PRESSED:
-                drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_pressed);
-                isPressed = true;
+            case STATE_CHECKED:
+                drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_checked);
+                isChecked = true;
                 break;
             case STATE_WRONG_KEY:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_wrong);
@@ -58,8 +56,7 @@ public class GraphicKeyNode extends View {
         setBackground(drawable);
     }
 
-    @Override
-    public boolean isPressed() {
-        return isPressed;
+    public boolean isChecked() {
+        return isChecked;
     }
 }
