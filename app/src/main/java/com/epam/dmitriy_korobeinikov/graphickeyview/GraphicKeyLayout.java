@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.epam.dmitriy_korobeinikov.graphickeyview.GraphicKeyNode.KeyNodeState;
+import com.epam.dmitriy_korobeinikov.graphickeyview.util.IntersectUtil;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
  * Created by Dmitriy_Korobeinikov on 2/19/2016.
  */
 public class GraphicKeyLayout extends ViewGroup {
+    public static final String TAG = GraphicKeyLayout.class.getSimpleName();
 
     private static final String CORRECT_PATH = "01258";
     private static final int NODES_IN_ROW = 3;
@@ -209,9 +211,25 @@ public class GraphicKeyLayout extends ViewGroup {
     private void connectNodes() {
         Point lastNodeCenter = mLastNode.getCenter();
         float[] completeLine = {startX, startY, lastNodeCenter.x, lastNodeCenter.y};
+
+        Rect hitRect = new Rect();
+        View node;
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            node = getChildAt(i);
+            node.getHitRect(hitRect);
+            if (!node.isPressed() && IntersectUtil.isLineIntersectRect(completeLine[0], completeLine[1], completeLine[2], completeLine[3],
+                    hitRect.left, hitRect.top, hitRect.right, hitRect.bottom)) {
+                ((GraphicKeyNode) node).updateState(GraphicKeyNode.STATE_CHECKED);
+                mPath.append(indexOfChild(node));
+            }
+        }
+
         mCompletedLines.add(completeLine);
         startNewLine(lastNodeCenter);
     }
+
+
 
     private void setupInitialState() {
         mStartNode = null;
