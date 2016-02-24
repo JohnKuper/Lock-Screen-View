@@ -17,8 +17,6 @@ public class GraphicKeyNode extends View {
     public static final int STATE_CHECKED = 1;
     public static final int STATE_WRONG_KEY = 2;
 
-    private boolean isChecked;
-
     @IntDef({STATE_DEFAULT, STATE_CHECKED, STATE_WRONG_KEY})
     public @interface KeyNodeState {
 
@@ -43,20 +41,16 @@ public class GraphicKeyNode extends View {
         switch (state) {
             case STATE_DEFAULT:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_default);
-                isChecked = false;
+                setPressed(false);
                 break;
             case STATE_CHECKED:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_checked);
-                isChecked = true;
+                setPressed(true);
                 break;
             case STATE_WRONG_KEY:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_wrong);
                 break;
         }
         setBackground(drawable);
-    }
-
-    public boolean isChecked() {
-        return isChecked;
     }
 }

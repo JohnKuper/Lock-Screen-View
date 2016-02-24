@@ -37,7 +37,6 @@ public class GraphicKeyLayout extends ViewGroup {
     private GraphicKeyNode mStartNode;
     private GraphicKeyNode mLastNode;
     private ArrayList<float[]> mCompletedLines;
-    private ArrayList<GraphicKeyNode> mNodes;
     private StringBuilder mPath = new StringBuilder();
 
     public GraphicKeyLayout(Context context) {
@@ -58,19 +57,12 @@ public class GraphicKeyLayout extends ViewGroup {
     private void init() {
         mPaint = new Paint();
         mCompletedLines = new ArrayList<>();
-        mNodes = new ArrayList<>();
 
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(5f);
         setWillNotDraw(false);
-    }
-
-    @Override
-    public void onViewAdded(View child) {
-        super.onViewAdded(child);
-        mNodes.add((GraphicKeyNode) child);
     }
 
     @Override
@@ -143,24 +135,25 @@ public class GraphicKeyLayout extends ViewGroup {
                 this.removeCallbacks(mDelayedInitialState);
                 setupInitialState();
 
-                mStartNode = getNodeUnderEvent(event);
-                if (mStartNode != null) {
+                View startNode = getNodeUnderEvent(event);
+                if (startNode != null) {
+                    mStartNode = (GraphicKeyNode) startNode;
                     mStartNode.updateState(GraphicKeyNode.STATE_CHECKED);
                     Point center = mStartNode.getCenter();
                     startNewLine(center);
-                    mPath.append(mNodes.indexOf(mStartNode));
+                    mPath.append(indexOfChild(startNode));
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mStartNode != null) {
                     endX = (int) event.getX();
                     endY = (int) event.getY();
-                    GraphicKeyNode nextNode = getNodeUnderEvent(event);
+                    View nextNode = getNodeUnderEvent(event);
                     if (nextNode != null) {
-                        mLastNode = nextNode;
+                        mLastNode = (GraphicKeyNode) nextNode;
                         mLastNode.updateState(GraphicKeyNode.STATE_CHECKED);
                         connectNodes();
-                        mPath.append(mNodes.indexOf(mLastNode));
+                        mPath.append(indexOfChild(nextNode));
                     }
                 }
                 break;
@@ -202,7 +195,7 @@ public class GraphicKeyLayout extends ViewGroup {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             GraphicKeyNode child = (GraphicKeyNode) getChildAt(i);
-            if (child.isChecked()) {
+            if (child.isPressed()) {
                 child.updateState(GraphicKeyNode.STATE_WRONG_KEY);
             }
         }
@@ -237,13 +230,14 @@ public class GraphicKeyLayout extends ViewGroup {
         }
     }
 
-    public GraphicKeyNode getNodeUnderEvent(MotionEvent event) {
-        GraphicKeyNode node;
+    public View getNodeUnderEvent(MotionEvent event) {
+        View node;
         Rect rect = new Rect();
-        for (int i = 0; i < mNodes.size(); i++) {
-            node = mNodes.get(i);
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            node = getChildAt(i);
             node.getHitRect(rect);
-            if (!node.isChecked() && rect.contains((int) event.getX(), (int) event.getY())) {
+            if (!node.isPressed() && rect.contains((int) event.getX(), (int) event.getY())) {
                 return node;
             }
         }
