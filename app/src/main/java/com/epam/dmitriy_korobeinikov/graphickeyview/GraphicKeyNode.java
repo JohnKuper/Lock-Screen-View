@@ -17,6 +17,8 @@ public class GraphicKeyNode extends View {
     public static final int STATE_CHECKED = 1;
     public static final int STATE_WRONG_KEY = 2;
 
+    private float mArrowAngle;
+
     @IntDef({STATE_DEFAULT, STATE_CHECKED, STATE_WRONG_KEY})
     public @interface KeyNodeState {
 
@@ -31,9 +33,15 @@ public class GraphicKeyNode extends View {
     }
 
     public Point getCenter() {
-        int x = (int) (getX() + getWidth() / 2);
-        int y = (int) (getY() + getHeight() / 2);
-        return new Point(x, y);
+        return new Point(getCenterX(), getCenterY());
+    }
+
+    public int getCenterX() {
+        return (int) (getX() + getWidth() / 2);
+    }
+
+    public int getCenterY() {
+        return (int) (getY() + getHeight() / 2);
     }
 
     public void updateState(@KeyNodeState int state) {
@@ -52,5 +60,9 @@ public class GraphicKeyNode extends View {
                 break;
         }
         setBackground(drawable);
+    }
+
+    public void setArrowAngle(float arrowAngle) {
+        mArrowAngle = arrowAngle;
     }
 }

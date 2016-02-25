@@ -29,8 +29,6 @@ public class GraphicKeyLayout extends ViewGroup {
 
     private final DelayedInitialState mDelayedInitialState = new DelayedInitialState();
 
-    private int startX;
-    private int startY;
     private int endX;
     private int endY;
     private int mHorizontalSpacing;
@@ -120,10 +118,12 @@ public class GraphicKeyLayout extends ViewGroup {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for (float[] line : mCompletedLines) {
-            canvas.drawLines(line, mPaint);
+        if (mStartNode != null) {
+            for (float[] line : mCompletedLines) {
+                canvas.drawLines(line, mPaint);
+            }
+            canvas.drawLine(mStartNode.getCenterX(), mStartNode.getCenterY(), endX, endY, mPaint);
         }
-        canvas.drawLine(startX, startY, endX, endY, mPaint);
     }
 
     @Override
@@ -142,8 +142,10 @@ public class GraphicKeyLayout extends ViewGroup {
                 if (startNode != null) {
                     mStartNode = (GraphicKeyNode) startNode;
                     mStartNode.updateState(GraphicKeyNode.STATE_CHECKED);
-                    Point center = mStartNode.getCenter();
-                    startNewLine(center);
+
+                    endX = mStartNode.getCenterX();
+                    endY = mStartNode.getCenterY();
+
                     mPath.append(indexOfChild(startNode));
                 }
                 break;
@@ -156,7 +158,6 @@ public class GraphicKeyLayout extends ViewGroup {
                         mLastNode = (GraphicKeyNode) nextNode;
                         mLastNode.updateState(GraphicKeyNode.STATE_CHECKED);
                         connectNodes();
-                        mPath.append(indexOfChild(nextNode));
                     }
                 }
                 break;
@@ -204,31 +205,46 @@ public class GraphicKeyLayout extends ViewGroup {
         }
     }
 
-    private void startNewLine(Point center) {
-        startX = endX = center.x;
-        startY = endY = center.y;
-    }
-
     private void connectNodes() {
-        Point lastNodeCenter = mLastNode.getCenter();
-        float[] completeLine = {startX, startY, lastNodeCenter.x, lastNodeCenter.y};
+        float[] completeLine = {mStartNode.getCenterX(), mStartNode.getCenterY(), mLastNode.getCenterX(), mLastNode.getCenterY()};
+        mCompletedLines.add(completeLine);
 
-        Rect hitRect = new Rect();
-        View node;
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            node = getChildAt(i);
-            node.getHitRect(hitRect);
-            truncateHitRect(hitRect);
-            if (!node.isPressed() && IntersectUtil.isLineIntersectRect(completeLine[0], completeLine[1], completeLine[2], completeLine[3],
-                    hitRect.left, hitRect.top, hitRect.right, hitRect.bottom)) {
-                ((GraphicKeyNode) node).updateState(GraphicKeyNode.STATE_CHECKED);
-                mPath.append(indexOfChild(node));
-            }
+        float angle = getAngle(mStartNode.getCenter(), mLastNode.getCenter());
+        mStartNode.setArrowAngle(angle);
+
+        GraphicKeyNode missedNode = findMissedNode(completeLine);
+        if (missedNode != null) {
+            missedNode.updateState(GraphicKeyNode.STATE_CHECKED);
+            missedNode.setArrowAngle(angle);
+            mPath.append(indexOfChild(missedNode));
         }
 
-        mCompletedLines.add(completeLine);
-        startNewLine(lastNodeCenter);
+        mPath.append(indexOfChild(mLastNode));
+        mStartNode = mLastNode;
+    }
+
+    public float getAngle(Point start, Point target) {
+        float angle = (float) Math.toDegrees(Math.atan2(target.y - start.y, target.x - start.x));
+        if (angle < 0) {
+            angle += 360;
+        }
+        return angle;
+    }
+
+    private GraphicKeyNode findMissedNode(float[] completeLine) {
+        GraphicKeyNode missedNode;
+        Rect hitRect = new Rect();
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            missedNode = (GraphicKeyNode) getChildAt(i);
+            missedNode.getHitRect(hitRect);
+            truncateHitRect(hitRect);
+            if (!missedNode.isPressed() && IntersectUtil.isLineIntersectRect(completeLine[0], completeLine[1], completeLine[2], completeLine[3],
+                    hitRect.left, hitRect.top, hitRect.right, hitRect.bottom)) {
+                return missedNode;
+            }
+        }
+        return null;
     }
 
     private void truncateHitRect(Rect rect) {
@@ -243,7 +259,6 @@ public class GraphicKeyLayout extends ViewGroup {
         mStartNode = null;
         mLastNode = null;
         mPath.setLength(0);
-        startNewLine(new Point(0, 0));
         mCompletedLines.clear();
         updateAllNodesState(GraphicKeyNode.STATE_DEFAULT);
     }
@@ -270,6 +285,7 @@ public class GraphicKeyLayout extends ViewGroup {
         }
         return null;
     }
+
     public static class LayoutParams extends ViewGroup.LayoutParams {
 
         private int x;
