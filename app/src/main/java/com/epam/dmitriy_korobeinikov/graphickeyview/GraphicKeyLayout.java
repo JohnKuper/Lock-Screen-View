@@ -23,8 +23,9 @@ import java.util.ArrayList;
 public class GraphicKeyLayout extends ViewGroup {
     public static final String TAG = GraphicKeyLayout.class.getSimpleName();
 
-    private static final String CORRECT_PATH = "01258";
+    public static final double TRUNCATE_FACTOR = 4;
     private static final int NODES_IN_ROW = 3;
+    private static final String CORRECT_PATH = "01258";
 
     private final DelayedInitialState mDelayedInitialState = new DelayedInitialState();
 
@@ -218,6 +219,7 @@ public class GraphicKeyLayout extends ViewGroup {
         for (int i = 0; i < childCount; i++) {
             node = getChildAt(i);
             node.getHitRect(hitRect);
+            truncateHitRect(hitRect);
             if (!node.isPressed() && IntersectUtil.isLineIntersectRect(completeLine[0], completeLine[1], completeLine[2], completeLine[3],
                     hitRect.left, hitRect.top, hitRect.right, hitRect.bottom)) {
                 ((GraphicKeyNode) node).updateState(GraphicKeyNode.STATE_CHECKED);
@@ -229,7 +231,13 @@ public class GraphicKeyLayout extends ViewGroup {
         startNewLine(lastNodeCenter);
     }
 
-
+    private void truncateHitRect(Rect rect) {
+        float centerX = rect.exactCenterX();
+        float centerY = rect.exactCenterY();
+        int insetX = (int) ((centerX - rect.left) / TRUNCATE_FACTOR);
+        int insetY = (int) ((centerY - rect.top) / TRUNCATE_FACTOR);
+        rect.inset(insetX, insetY);
+    }
 
     private void setupInitialState() {
         mStartNode = null;
@@ -250,18 +258,18 @@ public class GraphicKeyLayout extends ViewGroup {
 
     public View getNodeUnderEvent(MotionEvent event) {
         View node;
-        Rect rect = new Rect();
+        Rect hitRect = new Rect();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             node = getChildAt(i);
-            node.getHitRect(rect);
-            if (!node.isPressed() && rect.contains((int) event.getX(), (int) event.getY())) {
+            node.getHitRect(hitRect);
+            truncateHitRect(hitRect);
+            if (!node.isPressed() && hitRect.contains((int) event.getX(), (int) event.getY())) {
                 return node;
             }
         }
         return null;
     }
-
     public static class LayoutParams extends ViewGroup.LayoutParams {
 
         private int x;
