@@ -2,17 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:bottom="@dimen/inner_circle_layer_list_padding"
+        android:drawable="@drawable/inner_circle"
         android:left="@dimen/inner_circle_layer_list_padding"
         android:right="@dimen/inner_circle_layer_list_padding"
-        android:top="@dimen/inner_circle_layer_list_padding">
-        <shape android:shape="oval">
-            <solid android:color="@android:color/white" />
-            <stroke
-                android:width="2dp"
-                android:color="@android:color/black" />
-            <size
-                android:width="20dp"
-                android:height="20dp" />
-        </shape>
-    </item>
+        android:top="@dimen/inner_circle_layer_list_padding"
+        />
+
 </layer-list>

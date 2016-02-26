@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/key_node_default"/>
     <item>
         <shape android:shape="oval">
             <stroke
                 android:width="3dp"
-                android:color="@color/colorAccent" />
+                android:color="@color/colorAccent"
+                />
         </shape>
     </item>
 
-    <item
-        android:bottom="@dimen/inner_circle_layer_list_padding"
-        android:left="@dimen/inner_circle_layer_list_padding"
-        android:right="@dimen/inner_circle_layer_list_padding"
-        android:top="@dimen/inner_circle_layer_list_padding">
-        <shape android:shape="oval">
-            <solid android:color="@android:color/white">
-
-            </solid>
-            <stroke
-                android:width="2dp"
-                android:color="@android:color/black" />
-            <size
-                android:width="23dp"
-                android:height="23dp" />
-        </shape>
+    <item>
+        <bitmap
+            android:gravity="right"
+            android:src="@drawable/ic_arrow_small"
+            />
     </item>
 
 </layer-list>
