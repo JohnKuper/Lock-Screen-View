@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:bottom="@dimen/inner_circle_layer_list_padding"
-        android:drawable="@drawable/inner_circle"
+        android:drawable="@drawable/ic_inner_circle"
         android:left="@dimen/inner_circle_layer_list_padding"
         android:right="@dimen/inner_circle_layer_list_padding"
         android:top="@dimen/inner_circle_layer_list_padding"

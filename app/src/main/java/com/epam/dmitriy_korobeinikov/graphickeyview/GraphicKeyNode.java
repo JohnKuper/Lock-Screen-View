@@ -50,7 +50,7 @@ public class GraphicKeyNode extends View {
                 setPressed(true);
                 break;
             case STATE_WRONG_KEY:
-                Bitmap bitmap = createFromLayerList(R.drawable.key_node_wrong_90);
+                Bitmap bitmap = createFromLayerList(R.drawable.key_node_wrong);
                 drawable = rotateBitmap(bitmap);
                 break;
         }

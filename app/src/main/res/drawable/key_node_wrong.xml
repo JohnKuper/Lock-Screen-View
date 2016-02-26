@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/key_node_default"/>
-    <item>
-        <shape android:shape="oval">
-            <stroke
-                android:width="3dp"
-                android:color="@color/colorAccent"
-                />
-        </shape>
-    </item>
 
-    <item>
-        <bitmap
-            android:gravity="right"
-            android:src="@drawable/ic_arrow_small"
-            />
-    </item>
+    <item android:drawable="@drawable/ic_red_circle"/>
+
+    <item
+        android:drawable="@drawable/key_node_default"
+        />
 
 </layer-list>
