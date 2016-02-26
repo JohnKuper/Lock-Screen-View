@@ -23,7 +23,7 @@ public class GraphicKeyNode extends View {
     public static final int STATE_CHECKED = 1;
     public static final int STATE_WRONG_KEY = 2;
 
-    private float mArrowAngle;
+    private float mArrowAngle = -1;
 
     @IntDef({STATE_DEFAULT, STATE_CHECKED, STATE_WRONG_KEY})
     public @interface KeyNodeState {
@@ -44,14 +44,20 @@ public class GraphicKeyNode extends View {
             case STATE_DEFAULT:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_default);
                 setPressed(false);
+                mArrowAngle = -1;
                 break;
             case STATE_CHECKED:
                 drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_checked);
                 setPressed(true);
                 break;
             case STATE_WRONG_KEY:
-                Bitmap bitmap = createFromLayerList(R.drawable.key_node_wrong);
-                drawable = rotateBitmap(bitmap);
+                if (mArrowAngle >= 0) {
+                    Bitmap bitmap = createFromLayerList(R.drawable.key_node_wrong_with_arrow);
+                    drawable = rotateBitmap(bitmap);
+
+                } else {
+                    drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_wrong);
+                }
                 break;
         }
         setBackground(drawable);
@@ -67,11 +73,11 @@ public class GraphicKeyNode extends View {
     }
 
     public BitmapDrawable rotateBitmap(Bitmap original) {
-        Bitmap result = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap result = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
 
         Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
         Canvas canvas = new Canvas(result);
-        canvas.rotate(mArrowAngle, getWidth() / 2, getHeight() / 2);
+        canvas.rotate(mArrowAngle, original.getWidth() / 2, original.getHeight() / 2);
         canvas.drawBitmap(original, 0, 0, paint);
         return new BitmapDrawable(getResources(), result);
     }

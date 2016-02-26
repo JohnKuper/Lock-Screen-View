@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/key_node_wrong"/>
+    <item>
+        <bitmap
+            android:gravity="center|right"
+            android:src="@drawable/ic_arrow"
+            />
+    </item>
+
+</layer-list>
