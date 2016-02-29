@@ -1,14 +1,8 @@
 package com.epam.dmitriy_korobeinikov.graphickeyview;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -19,6 +13,8 @@ import android.view.View;
  */
 public class GraphicKeyNode extends View {
 
+    private static final int MAX_LEVEL = 10000;
+    private static final float LEVELS_PER_DEGREE = MAX_LEVEL / 360f;
     public static final int STATE_DEFAULT = 0;
     public static final int STATE_CHECKED = 1;
     public static final int STATE_WRONG_KEY = 2;
@@ -52,34 +48,15 @@ public class GraphicKeyNode extends View {
                 break;
             case STATE_WRONG_KEY:
                 if (mArrowAngle >= 0) {
-                    Bitmap bitmap = createFromLayerList(R.drawable.key_node_wrong_with_arrow);
-                    drawable = rotateBitmap(bitmap);
-
+                    drawable = ContextCompat.getDrawable(getContext(), R.drawable.rotate_node_wrong_with_arrow);
+                    int level = Math.round(LEVELS_PER_DEGREE * mArrowAngle);
+                    drawable.setLevel(level);
                 } else {
                     drawable = ContextCompat.getDrawable(getContext(), R.drawable.key_node_wrong);
                 }
                 break;
         }
         setBackground(drawable);
-    }
-
-    public Bitmap createFromLayerList(@DrawableRes int res) {
-        LayerDrawable layerDrawable = (LayerDrawable) ContextCompat.getDrawable(getContext(), res);
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-
-        layerDrawable.setBounds(0, 0, getWidth(), getHeight());
-        layerDrawable.draw(new Canvas(bitmap));
-        return bitmap;
-    }
-
-    public BitmapDrawable rotateBitmap(Bitmap original) {
-        Bitmap result = Bitmap.createBitmap(original.getWidth(), original.getHeight(), Bitmap.Config.ARGB_8888);
-
-        Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
-        Canvas canvas = new Canvas(result);
-        canvas.rotate(mArrowAngle, original.getWidth() / 2, original.getHeight() / 2);
-        canvas.drawBitmap(original, 0, 0, paint);
-        return new BitmapDrawable(getResources(), result);
     }
 
     public void setArrowAngle(float arrowAngle) {
